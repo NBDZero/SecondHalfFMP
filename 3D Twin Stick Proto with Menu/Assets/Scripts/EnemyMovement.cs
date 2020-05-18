@@ -87,17 +87,17 @@ public class EnemyMovement : MonoBehaviour
         movementPath.direction = moveDirection;
 
         //If the movementPath intersects a wall start reversing:
-        if (Physics.Raycast(movementPath, out objectHit, 5f))
+        if (Physics.Raycast(movementPath, out objectHit, 2f))
         {
             if (objectHit.transform.tag == "Wall")
             {
-                isReversing = true;
-
+                movementPath.direction = -moveDirection;
+                moveDirection = -moveDirection;
             }
         }
 
         //Drawing the movement path for debugging:
-        Debug.DrawRay(transform.position, moveDirection * 5f);
+        Debug.DrawRay(transform.position, moveDirection * 2f);
         
     }
 }
