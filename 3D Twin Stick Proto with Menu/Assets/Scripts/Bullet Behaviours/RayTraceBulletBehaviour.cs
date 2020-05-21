@@ -25,23 +25,37 @@ public class RayTraceBulletBehaviour : MonoBehaviour
         private int currentBounces;
         private int maxBounces;
 
+
+    /// SlowMo Variables:
+    private Ray slowMoDetectorRay;
+    private RaycastHit objectHitSlowMo;
+
+    private bool canAffectTimeScale;
+
+
     // Start is called before the first frame update
     void Start()
     {
         //Initialising variables:
-        moveSpeed       = 5;
+        moveSpeed           = 5;
 
-        bulletPath      = new Ray(transform.position, transform.forward);
+        bulletPath          = new Ray(transform.position, transform.forward);
+        slowMoDetectorRay   = new Ray(transform.position, transform.forward);
 
-        currentBounces  = 0;
-        maxBounces      = 1;
+        currentBounces      = 0;
+        maxBounces          = 1;
+
+        canAffectTimeScale = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         Movement();
-        Reflections();
+        UpdateRays();
+        CheckForSlowMo();
+        Collisions();
+        Debug.Log(Time.deltaTime);
     }
 
     //Bullet Movement:
@@ -50,16 +64,51 @@ public class RayTraceBulletBehaviour : MonoBehaviour
        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
     }
 
-    //The reflections functions, dictates what the bullet should do when it's path is about to collide with another object
-    //including reflecting if has enough bounces remaining:
-    void Reflections()
+    void UpdateRays()
     {
         //updating the ray:
         bulletPath.origin = transform.position;
         bulletPath.direction = transform.forward;
+
+        slowMoDetectorRay.origin = transform.position;
+        slowMoDetectorRay.direction = transform.forward;
+
+    }
+
+    void CheckForSlowMo()
+    {
+        if (canAffectTimeScale)
+        {
+            if (Physics.Raycast(slowMoDetectorRay, out objectHitSlowMo, moveSpeed))
+            {
+
+                if (objectHitSlowMo.collider.gameObject != gameObject)
+                {
+                    if (objectHitSlowMo.transform.tag == "Tank")
+                    {
+                        GameManager.GetGameManager().isSlowMo = true;
+                        canAffectTimeScale = false;
+                    }
+                    else if (objectHitSlowMo.transform.tag == "Player")
+                    {
+                        GameManager.GetGameManager().isSlowMo = true;
+                        canAffectTimeScale = false;
+                    }
+
+                }
+            }
+            Debug.DrawRay(slowMoDetectorRay.origin, slowMoDetectorRay.direction * moveSpeed);
+        }
+    }
+
+    //The reflections functions, dictates what the bullet should do when it's path is about to collide with another object
+    //including reflecting if has enough bounces remaining:
+    void Collisions()
+    {
+        
         
         //Reading what the ray has collided with:
-        if( Physics.Raycast(bulletPath,out objectHit, moveSpeed * Time.deltaTime + .1f))
+        if( Physics.Raycast(bulletPath,out objectHit, moveSpeed * Time.deltaTime + .5f))
         {
             if (objectHit.collider.gameObject != gameObject)
             {
@@ -74,12 +123,16 @@ public class RayTraceBulletBehaviour : MonoBehaviour
                     Destroy(objectHit.collider.transform.parent.gameObject );
                     Destroy(gameObject);
                     GameMode.enemiesLeft -= 1;
+                    GameManager.GetGameManager().isSlowMo = false;
+                    canAffectTimeScale = true;
                 }
                 else if (objectHit.transform.tag == "Player")
                 {
                     Destroy(objectHit.collider.transform.parent.gameObject);
                     Destroy(gameObject);
                     SceneManager.LoadScene("DeathScreen");
+                    GameManager.GetGameManager().isSlowMo = false;
+                    canAffectTimeScale = true;
                 }
                 else if (objectHit.transform.tag == "Fire")
                 {

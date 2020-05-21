@@ -13,7 +13,15 @@ public class GameManager : MonoBehaviour
         return instance;
     }
 
-    SlowMoManager slowMoMangaer;
+    private SlowMoManager slowMoManager;
+
+    public SlowMoManager getTimeManager()
+    {
+        return slowMoManager;
+    }
+
+    private float defaultSlowTimeScale;
+    public bool isSlowMo;
 
 
     // Awake is called befoee anything else:
@@ -34,12 +42,44 @@ public class GameManager : MonoBehaviour
     //Start is called before the first frame of update:
     void Start()
     {
-        slowMoMangaer = new SlowMoManager();
+        slowMoManager = new SlowMoManager();
+
+        defaultSlowTimeScale = 0.1f;
+        isSlowMo = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        slowMoMangaer.SlowTime(0.05f);
+        AlterTime();
+    }
+
+    void AlterTime()
+    {
+        if (isSlowMo)
+        {
+            SlowTime();
+        }
+        if (!isSlowMo)
+        {
+            ResetTime();
+        }
+    }
+    void SlowTime()
+    {
+        Time.timeScale = defaultSlowTimeScale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        Debug.Log("SlowTime");
+    }
+
+    void SlowTime( float timeScale )
+    {
+        Time.timeScale = timeScale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+    }
+
+    void ResetTime()
+    {
+        Time.timeScale = 1f;
     }
 }

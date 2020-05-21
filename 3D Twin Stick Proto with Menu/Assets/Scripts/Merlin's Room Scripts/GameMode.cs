@@ -9,7 +9,7 @@ public class GameMode: MonoBehaviour
 
     public static int enemiesLeft;
     public GameObject doorOne;
-    public GameObject doorTwo;
+    //public GameObject doorTwo;
     public GameObject finalDoorOne;
     public GameObject finalDoorTwo;
     public GameObject key;
@@ -48,12 +48,12 @@ public class GameMode: MonoBehaviour
         if (enemiesLeft <= 0)
         {
             doorOne.gameObject.SetActive(false);
-            doorTwo.gameObject.SetActive(false);
+            //doorTwo.gameObject.SetActive(false);
         }
         else if (enemiesLeft > 0)
         {
             doorOne.gameObject.SetActive(true);
-            doorTwo.gameObject.SetActive(true);
+            //doorTwo.gameObject.SetActive(true);
             finalDoorOne.gameObject.SetActive(true);
             finalDoorTwo.gameObject.SetActive(true);
         }

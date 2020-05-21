@@ -5,26 +5,47 @@ using UnityEngine;
 public class SlowMoManager
 {
     private float defaultSlowTimeScale;
+    public bool isSlowMo;
 
     // Start is called before the first frame update
     void Start()
     {
-        defaultSlowTimeScale = .05f;
+        defaultSlowTimeScale = 0.1f;
+        isSlowMo = false;
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        
+        AlterTime();
     }
 
-    public void SlowTime()
+    void AlterTime()
+    {
+        if (isSlowMo)
+        {
+            SlowTime();
+        }
+        if (!isSlowMo)
+        {
+            ResetTime();
+        }
+    }
+    void SlowTime()
     {
         Time.timeScale = defaultSlowTimeScale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        Debug.Log("SlowTime");
     }
 
-    public void SlowTime(float timeScale)
+    void SlowTime(float timeScale)
     {
         Time.timeScale = timeScale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+    }
+
+    void ResetTime()
+    {
+        Time.timeScale = 1f;
     }
 }
