@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
         return instance;
     }
 
+    private Camera  camera;
+    private Vector3 m_ogCamPosition;
+    private float   m_ogCamOrthographicSize;
+
     private SlowMoManager slowMoManager;
 
     public SlowMoManager getTimeManager()
@@ -42,10 +46,14 @@ public class GameManager : MonoBehaviour
     //Start is called before the first frame of update:
     void Start()
     {
-        slowMoManager = new SlowMoManager();
+        slowMoManager           = new SlowMoManager();
 
-        defaultSlowTimeScale = 0.1f;
-        isSlowMo = false;
+        defaultSlowTimeScale    = 0.1f;
+        isSlowMo                = false;
+
+        camera                  = Camera.main;
+        m_ogCamPosition         = camera.transform.position;
+        m_ogCamOrthographicSize = camera.orthographicSize;
     }
 
     // Update is called once per frame
@@ -81,5 +89,18 @@ public class GameManager : MonoBehaviour
     void ResetTime()
     {
         Time.timeScale = 1f;
+    }
+
+    public void FollowCam(Vector3 position)
+    {
+        Vector3 followPos = new Vector3(position.x, position.y+10f, position.z-10f);
+        camera.transform.position = followPos;
+        camera.orthographicSize = 2f;
+    }
+
+    public void ResetCam()
+    {
+        camera.transform.position = m_ogCamPosition;
+        camera.orthographicSize = m_ogCamOrthographicSize;
     }
 }

@@ -1789,6 +1789,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloorTwoCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 8142833215616382640, guid: e644cb1abeedcbd4f80f3dd5a78f15d0,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 8142833215616382642, guid: e644cb1abeedcbd4f80f3dd5a78f15d0,
         type: 3}
       propertyPath: orthographic
