@@ -93,6 +93,9 @@ public class GameManager : MonoBehaviour
 
     public void FollowCam(Vector3 position)
     {
+        //camera = Camera.main;
+        //m_ogCamPosition = camera.transform.position;
+        //m_ogCamOrthographicSize = camera.orthographicSize;
         Vector3 followPos = new Vector3(position.x, position.y+10f, position.z-10f);
         camera.transform.position = followPos;
         camera.orthographicSize = 2f;
